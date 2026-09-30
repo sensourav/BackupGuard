@@ -1,14 +1,17 @@
 {
   "name": "backupguard",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "build:installer": "tauri build",
+    "installer": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/build-installer.ps1",
+    "uninstall": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/uninstall.ps1"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.11.1",
