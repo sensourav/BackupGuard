@@ -1,0 +1,67 @@
+# BackupGuard - Project Rules & Cursor Context
+
+## System Architecture & Role
+You are an expert senior system architect and full-stack software engineer working on **BackupGuard**—a lightweight, desktop-based, strictly read-only Data Backup Tracker, Bit Rot Detector, and Cross-Platform File Consistency Health Checker.
+
+---
+
+## 🛑 STRICT READ-ONLY GUARDRAILS (CRITICAL RULE)
+1. **ZERO WRITE / DELETE PERMISSIONS**: The application must NEVER under any circumstances execute `write`, `create`, `update`, `delete`, `unlink`, `rename`, or `move` file operations on monitored storage targets.
+2. **OS File Handle Security**:
+   - Node.js / Electron: Always open file descriptors using `fs.constants.O_RDONLY`.
+   - Rust / Tauri: Always configure file options as `FileOptions::new().read(true)` with `.write(false)`.
+3. **API Scopes**:
+   - Microsoft Graph API / OneDrive OAuth calls must be strictly restricted to read-only scopes (`Files.Read`, `Files.Read.All`).
+4. **Safety Check**: Reject any generated code or pull requests that attempt to modify, clean up, or alter files in monitored directories.
+
+---
+
+## Technical Stack & Standards
+- **Framework**: Tauri (Rust backend) or Node.js/Electron.
+- **Frontend**: React (TypeScript), Tailwind CSS (Dark Mode default: `slate-900` / `zinc-900` palette), Lucide-React icons.
+- **Database**: Local SQLite database for storing monitored path configs, mount states, baseline checksums, and audit session history.
+- **Hashing Engine**:
+  - Local/External Drives: Streaming chunked `xxHash64` / `SHA-256` and local `QuickXorHash` generator.
+  - Cloud (OneDrive): Zero-download hash fetching via Microsoft Graph API (`hashes.quickXorHash` / `hashes.sha256Hash`).
+
+---
+
+## Data Models & Folder Standards
+- **Folder Naming Standard**: ISO 8601 date format `YYYY-MM-DD` (e.g., `2026-09-16`).
+- **Watched Backup Set Structure**:
+  Each monitored backup set tracks 3 target locations:
+  1. `localPath` (e.g., `C:/Backups/DJI/`)
+  2. `externalPath` (e.g., `E:/Backups/DJI/`)
+  3. `cloudPath` (e.g., `/OneDrive/Backups/DJI/`)
+
+---
+
+## Core Features & Logic Specifications
+
+### 1. Drive Mount Auto-Detection
+- Continuously monitor OS volume mount/unmount events.
+- Dynamically transition external targets to `UNMOUNTED` status rather than triggering false `MISSING` file alerts when an external drive is unplugged.
+
+### 2. Zero-Download Cloud Hash Engine
+- Never download full remote cloud files over the internet to verify integrity.
+- Fetch native OneDrive `quickXorHash` or `sha256Hash` metadata via Graph API.
+- Match local files using an in-memory `QuickXorHash` calculation to compare against OneDrive zero-bandwidth.
+
+### 3. Silent Bit Rot Engine
+- Store verified checksums, file sizes, and modified timestamps (`mtime`) in SQLite during healthy scans.
+- Flag a file as `BIT_ROT` if its computed hash changes during subsequent audits while `mtime` and `size` remain untouched.
+
+### 4. 3-Way Discrepancy Matrix UI
+- Interactive 3-column comparative view: **Local | External | Cloud**.
+- Color-coded health badges:
+  - 🟢 `HEALTHY`: Identical hash and byte size across all connected targets.
+  - 🟡 `MISSING`: Present in 1 or 2 targets, absent in others.
+  - 🔴 `CORRUPT`: File exists in all targets but hashes or byte sizes mismatch.
+  - 🟣 `BIT_ROT`: Historical checksum mismatch detected on local/external disk over time.
+
+---
+
+## Code Quality & Style Guidelines
+- **TypeScript**: Enforce strict typing. Define explicit interface models (`WatchedFolderSet`, `DiscrepancyItem`, `HealthStatus`, `AuditLog`).
+- **Error Handling**: Gracefully handle unmounted volumes, network timeouts, and read-permission errors without crashing the main application runtime.
+- **Component Design**: Modular, isolated React components styled with Tailwind CSS utility classes and Lucide icons.

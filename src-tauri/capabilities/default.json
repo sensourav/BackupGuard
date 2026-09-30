@@ -1,0 +1,20 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Invoke BackupGuard commands and listen for drive events. No filesystem plugin.",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "allow-list-watched-folders",
+    "allow-add-watched-folder",
+    "allow-remove-watched-folder",
+    "allow-list-drive-mounts",
+    "allow-audit-folder-set",
+    "allow-list-discrepancies",
+    "allow-list-audit-logs",
+    "allow-onedrive-status",
+    "allow-onedrive-connect",
+    "allow-onedrive-disconnect"
+  ]
+}
