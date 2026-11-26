@@ -23,7 +23,7 @@ onedrive.client.local.json
 credentials.json
 **/*.credentials.json
 *.db
-backupguard.db
+guardsenpai.db
 .cursorrules
 
 # Editor directories and files

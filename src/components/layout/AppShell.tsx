@@ -78,7 +78,7 @@ export function AppShell() {
 
   useEffect(() => {
     if (!isTauri()) {
-      setError("Open the BackupGuard desktop window to save folders and detect drives.");
+      setError("Open the Guard Senpai desktop window to save folders and detect drives.");
       return;
     }
 
@@ -143,7 +143,7 @@ export function AppShell() {
   async function handleRemove(id: string) {
     const folder = folders.find((item) => item.id === id);
     const confirmed = window.confirm(
-      `Remove ${folder?.name ?? "this set"} from BackupGuard? Files on disk stay where they are.`,
+      `Remove ${folder?.name ?? "this set"} from Guard Senpai? Files on disk stay where they are.`,
     );
     if (!confirmed) {
       return;

@@ -1,6 +1,6 @@
 # Third-party notices
 
-BackupGuard is licensed under the MIT License (see [LICENSE](LICENSE)). The following third-party components are used in development and/or the distributed Windows application.
+Guard Senpai is licensed under the MIT License (see [LICENSE](LICENSE)). The following third-party components are used in development and/or the distributed Windows application.
 
 ## JavaScript (runtime)
 

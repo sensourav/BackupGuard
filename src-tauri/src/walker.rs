@@ -127,7 +127,7 @@ pub(crate) fn modified_iso(time: SystemTime) -> String {
 #[cfg(test)]
 pub fn fixture_root(name: &str) -> std::path::PathBuf {
     std::env::temp_dir().join(format!(
-        "backupguard-{name}-{}",
+        "guardsenpai-{name}-{}",
         uuid::Uuid::new_v4()
     ))
 }

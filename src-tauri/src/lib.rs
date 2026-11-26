@@ -387,9 +387,9 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             let dir = app.path().app_data_dir().map_err(|err| err.to_string())?;
-            // App-data directory for backupguard.db only. This is not a watched backup path.
+            // App-data directory for guardsenpai.db only. This is not a watched backup path.
             std::fs::create_dir_all(&dir).map_err(|err| err.to_string())?;
-            let db = Database::open(&dir.join("backupguard.db")).map_err(|err| err.to_string())?;
+            let db = Database::open(&dir.join("guardsenpai.db")).map_err(|err| err.to_string())?;
             if let Ok(volumes) = list_connected_volumes() {
                 db.apply_volumes(&volumes)?;
             }
@@ -415,5 +415,5 @@ pub fn run() {
             onedrive_disconnect
         ])
         .run(tauri::generate_context!())
-        .expect("error while running BackupGuard");
+        .expect("error while running Guard Senpai");
 }

@@ -57,7 +57,7 @@ export function DashboardHeader({ status }: DashboardHeaderProps) {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-semibold tracking-tight text-zinc-50">
-                BackupGuard
+                Guard Senpai
               </h1>
               <span className="rounded-full bg-zinc-800 px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide text-zinc-300 ring-1 ring-zinc-700">
                 Read-only

@@ -1,4 +1,4 @@
-# Builds the Windows NSIS installer (setup.exe). The setup registers BackupGuard in
+# Builds the Windows NSIS installer (setup.exe). The setup registers Guard Senpai in
 # Windows "Apps & features", installs under %LOCALAPPDATA%\Programs\..., and places
 # uninstall.exe in that install folder. Use scripts/uninstall.ps1 to run uninstall.
 param(
@@ -19,7 +19,7 @@ function Get-BuildStamp {
     return (Get-Date -Format "yyyyMMdd-HHmmss")
 }
 
-Write-Host "BackupGuard — building Windows installer..." -ForegroundColor Cyan
+Write-Host "Guard Senpai — building Windows installer..." -ForegroundColor Cyan
 
 if (-not $SkipNpmInstall) {
     Write-Host "npm install"
@@ -40,11 +40,11 @@ $targetDir = $metadata.target_directory
 $version = Get-AppVersion
 $stamp = Get-BuildStamp
 $bundleDir = Join-Path $targetDir "release\bundle\nsis"
-$tauriSetupName = "BackupGuard_${version}_x64-setup.exe"
+$tauriSetupName = "GuardSenpai_${version}_x64-setup.exe"
 $builtSetup = Join-Path $bundleDir $tauriSetupName
 
 if (-not (Test-Path $builtSetup)) {
-    $fallback = Get-ChildItem -Path $bundleDir -Filter "BackupGuard_*_x64-setup.exe" -ErrorAction SilentlyContinue |
+    $fallback = Get-ChildItem -Path $bundleDir -Filter "GuardSenpai_*_x64-setup.exe" -ErrorAction SilentlyContinue |
         Sort-Object LastWriteTime -Descending |
         Select-Object -First 1
     if ($fallback) {
@@ -57,9 +57,9 @@ if (-not (Test-Path $builtSetup)) {
 $releaseDir = Join-Path $repoRoot "release"
 New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
 
-$stampedName = "BackupGuard_${version}_${stamp}_x64-setup.exe"
+$stampedName = "GuardSenpai_${version}_${stamp}_x64-setup.exe"
 $stampedCopy = Join-Path $releaseDir $stampedName
-$latestCopy = Join-Path $releaseDir "BackupGuard_latest_x64-setup.exe"
+$latestCopy = Join-Path $releaseDir "GuardSenpai_latest_x64-setup.exe"
 $manifestPath = Join-Path $releaseDir "latest-build.json"
 
 Copy-Item -Path $builtSetup -Destination $stampedCopy -Force
@@ -69,13 +69,13 @@ $manifest = @{
     version = $version
     buildStamp = $stamp
     setupExe = $stampedName
-    latestExe = "BackupGuard_latest_x64-setup.exe"
+    latestExe = "GuardSenpai_latest_x64-setup.exe"
     builtAt = (Get-Date).ToUniversalTime().ToString("o")
     cargoBundle = $builtSetup
 } | ConvertTo-Json -Depth 4
 Set-Content -Path $manifestPath -Value $manifest -Encoding utf8
 
-$portableExe = Join-Path $targetDir "release\backupguard.exe"
+$portableExe = Join-Path $targetDir "release\guardsenpai.exe"
 
 Write-Host ""
 Write-Host "Done." -ForegroundColor Green

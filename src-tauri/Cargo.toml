@@ -1,12 +1,12 @@
 [package]
-name = "backupguard"
+name = "guardsenpai"
 version = "0.1.0"
-description = "BackupGuard desktop shell"
+description = "Guard Senpai desktop shell"
 edition = "2021"
 rust-version = "1.77"
 
 [lib]
-name = "backupguard_lib"
+name = "guardsenpai_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]

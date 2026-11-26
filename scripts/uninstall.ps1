@@ -1,6 +1,6 @@
-# Runs BackupGuard's registered Windows uninstaller (uninstall.exe in the install folder).
+# Runs Guard Senpai's registered Windows uninstaller (uninstall.exe in the install folder).
 # Removes the program directory and the uninstall registry entry. Does not delete
-# watched backup paths or %APPDATA%\com.backupguard.app\ unless you remove that yourself.
+# watched backup paths or %APPDATA%\com.guardsenpai.app\ unless you remove that yourself.
 param(
     [switch]$Quiet,
     [switch]$RemoveAppData
@@ -8,7 +8,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-function Find-BackupGuardUninstallEntry {
+function Find-GuardsenpaiUninstallEntry {
     $roots = @(
         "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*",
         "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*"
@@ -19,7 +19,7 @@ function Find-BackupGuardUninstallEntry {
             if (-not $item.DisplayName) {
                 continue
             }
-            if ($item.DisplayName -match "BackupGuard") {
+            if ($item.DisplayName -match "Guard Senpai") {
                 return $item
             }
         }
@@ -27,15 +27,15 @@ function Find-BackupGuardUninstallEntry {
     return $null
 }
 
-$entry = Find-BackupGuardUninstallEntry
+$entry = Find-GuardsenpaiUninstallEntry
 if (-not $entry) {
-    Write-Error "BackupGuard is not installed (no entry under Windows Uninstall registry)."
+    Write-Error "Guard Senpai is not installed (no entry under Windows Uninstall registry)."
     exit 1
 }
 
 $uninstall = $entry.UninstallString
 if (-not $uninstall) {
-    Write-Error "Found BackupGuard in the registry but UninstallString is missing."
+    Write-Error "Found Guard Senpai in the registry but UninstallString is missing."
     exit 1
 }
 
@@ -74,17 +74,17 @@ if ($process.ExitCode -ne 0) {
 }
 
 if ($RemoveAppData) {
-    $appData = Join-Path $env:APPDATA "com.backupguard.app"
+    $appData = Join-Path $env:APPDATA "com.guardsenpai.app"
     if (Test-Path $appData) {
         Write-Host "Removing app data: $appData"
         Remove-Item -Path $appData -Recurse -Force
     }
 }
 
-Write-Host "BackupGuard uninstall finished." -ForegroundColor Green
+Write-Host "Guard Senpai uninstall finished." -ForegroundColor Green
 Write-Host "Install folder and uninstall registry entry should be removed by the NSIS uninstaller."
 if (-not $RemoveAppData) {
     Write-Host "App database/tokens (if any) remain at:"
-    Write-Host "  $env:APPDATA\com.backupguard.app"
+    Write-Host "  $env:APPDATA\com.guardsenpai.app"
     Write-Host "Pass -RemoveAppData to delete that folder too."
 }

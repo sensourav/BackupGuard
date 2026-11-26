@@ -168,7 +168,7 @@ fn load_client_id_from_env_paths() -> Result<String, String> {
             paths.push(parent.join("onedrive.client.local.json"));
         }
     }
-    if let Some(config) = std::env::var_os("BACKUPGUARD_ONEDRIVE_CONFIG") {
+    if let Some(config) = std::env::var_os("GUARDSENPAI_ONEDRIVE_CONFIG") {
         paths.insert(0, std::path::PathBuf::from(config));
     }
     load_client_id(&paths)
@@ -375,7 +375,7 @@ fn wait_for_code(listener: &TcpListener, expected_state: &str) -> Result<String,
         }
     }
     let text = String::from_utf8_lossy(&received);
-    let page = "<!doctype html><html><body style=\"font-family:sans-serif;background:#020617;color:#e4e4e7\"><p>BackupGuard signed in. You can close this window.</p></body></html>";
+    let page = "<!doctype html><html><body style=\"font-family:sans-serif;background:#020617;color:#e4e4e7\"><p>Guard Senpai signed in. You can close this window.</p></body></html>";
     let response = format!(
         "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{page}",
         page.len()
@@ -393,7 +393,7 @@ fn wait_for_code(listener: &TcpListener, expected_state: &str) -> Result<String,
     }
     let state = query_param(query, "state").unwrap_or_default();
     if state != expected_state {
-        return Err("OneDrive sign-in response did not match this BackupGuard session".to_string());
+        return Err("OneDrive sign-in response did not match this Guard Senpai session".to_string());
     }
     query_param(query, "code").filter(|code| !code.is_empty()).ok_or_else(|| {
         "OneDrive did not return a sign-in code".to_string()
@@ -630,7 +630,7 @@ mod tests {
 
     #[test]
     fn pkce_challenge_is_base64url_sha256() {
-        let challenge = code_challenge("backupguard-verifier");
+        let challenge = code_challenge("guardsenpai-verifier");
         assert_eq!(challenge.len(), 43);
         assert!(!challenge.contains('='));
         assert!(!challenge.contains('+'));
