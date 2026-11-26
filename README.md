@@ -1,66 +1,41 @@
 # BackupGuard
 
-Read-only desktop app for tracking local, external, and OneDrive backups: audits, bit-rot detection, and a 3-way discrepancy matrix. Built with Tauri 2, React, and SQLite.
+Read-only Windows desktop app for backup auditing: compare local disks, external volumes, and OneDrive metadata; detect bit-rot and surface a three-way discrepancy matrix. Built with **Tauri 2**, **React**, and **SQLite**.
 
-## Requirements checklist
+## Features
 
-| # | What you asked for | Status |
-|---|-------------------|--------|
-| 1 | After each build, a **build-specific** `.exe` installer in the repo tree | **Yes** — `npm run installer` writes `release/BackupGuard_<version>_<timestamp>_x64-setup.exe` plus `release/BackupGuard_latest_x64-setup.exe` and `release/latest-build.json`. Installers are gitignored (not pushed as blobs); see [release/README.md](release/README.md). |
-| 2 | Install to a folder, **uninstall.exe** in that folder, **registry** entry, uninstall removes install dir + registry | **Yes** — Tauri NSIS (per-user install under `%LOCALAPPDATA%\Programs\...`) ships `uninstall.exe` beside the app and registers **Settings → Apps**. Uninstall removes the program files and the uninstall registry key. It does **not** delete your backup folders or `%APPDATA%\com.backupguard.app\` unless you opt in (see below). |
-| 3 | **Script in the repo** to build the installer on demand | **Yes** — [scripts/build-installer.ps1](scripts/build-installer.ps1) / [scripts/build-installer.cmd](scripts/build-installer.cmd), or `npm run installer`. |
-| 4 | **README** install + build instructions | **This file** |
-| 5 | Installer installs **Rust / Node / build tools** on the target PC | **No (by design)** — end users only need the setup exe. The app is already compiled inside it. The installer **can** install **Microsoft Edge WebView2** if missing (`webviewInstallMode: downloadBootstrapper` in [src-tauri/tauri.conf.json](src-tauri/tauri.conf.json)). Rust, Node, and MSVC are **only** required on the machine that **builds** the installer, not on machines that **run** BackupGuard. Bundling Rust via NSIS would be hundreds of MB and is not how desktop apps are distributed. |
+- **Watched folder sets** — local path, external path, and optional OneDrive folder per set
+- **Audits** — full tree, single date folder (`YYYY-MM-DD`), or single file scope
+- **Integrity** — SHA-256 on local/external files; QuickXorHash alignment with OneDrive when connected
+- **Health states** — healthy, missing, corrupt, bit-rot (with plain-language notes)
+- **Installer** — per-user NSIS setup with optional WebView2 bootstrapper (see [release/README.md](release/README.md))
 
----
+BackupGuard does **not** write, delete, or rename files in your backup locations.
 
-## Install BackupGuard (end user)
+## Install (end user)
 
-1. Obtain **`release/BackupGuard_latest_x64-setup.exe`** after someone builds the repo, or download a release build from GitHub Releases.
-2. Double-click the setup exe and complete the wizard.
-3. If WebView2 is missing, the installer will download/run Microsoft’s WebView2 bootstrapper (one-time).
-4. Launch **BackupGuard** from the Start menu.
+1. Obtain **`release/BackupGuard_latest_x64-setup.exe`** from a maintainer build or a GitHub Release.
+2. Run the setup wizard (WebView2 is installed automatically if missing).
+3. Launch **BackupGuard** from the Start menu.
 
-Default install location (per-user, no admin):
-
-`%LOCALAPPDATA%\Programs\BackupGuard\`
-
-That folder contains `backupguard.exe` and **`uninstall.exe`**.
+Default install location: `%LOCALAPPDATA%\Programs\BackupGuard\` (`backupguard.exe` and `uninstall.exe`).
 
 ### OneDrive (optional)
 
-Copy [onedrive.client.example.json](onedrive.client.example.json) to `onedrive.client.local.json` next to the app or under `%APPDATA%\com.backupguard.app\`, set your Azure **clientId**, and register redirect `http://127.0.0.1:43821/callback`.
+1. Register a public Azure app with redirect URI `http://127.0.0.1:43821/callback`.
+2. Copy [onedrive.client.example.json](onedrive.client.example.json) to `onedrive.client.local.json` in `%APPDATA%\com.backupguard.app\` (or next to the app when developing).
+3. Set your Azure **application (client) ID** — this is a public identifier, not a client secret. **Do not commit** `onedrive.client.local.json`.
+
+OAuth scopes used at runtime: `openid`, `profile`, `offline_access`, `User.Read`, and **`Files.Read`** (metadata only; file contents are not downloaded).
 
 ### Uninstall
 
-**Windows (normal):**
+- **Settings → Apps → BackupGuard → Uninstall**, or run `uninstall.exe` in the install folder.
+- From a dev clone after installing via setup: `npm run uninstall` (add **`-RemoveAppData`** to remove `%APPDATA%\com.backupguard.app\` and encrypted tokens). Watched backup folders on disk are never deleted by BackupGuard.
 
-- **Settings → Apps → Installed apps → BackupGuard → Uninstall**, or  
-- Run **`uninstall.exe`** in the install folder, or  
-- Start menu → **Uninstall BackupGuard**
+## Build the installer (developer machine)
 
-This removes the install directory and the Windows uninstall registry entry.
-
-**From a dev clone (after you installed via setup):**
-
-```powershell
-npm run uninstall
-# or: .\scripts\uninstall.ps1
-```
-
-Add **`-RemoveAppData`** to also delete `%APPDATA%\com.backupguard.app\` (SQLite DB and encrypted OneDrive tokens). Your **watched backup files on disk are never deleted** by BackupGuard.
-
----
-
-## Create the installer (developer / build machine)
-
-**On the PC that builds** (not on every end-user PC), install once:
-
-- [Node.js](https://nodejs.org/) (LTS)
-- [Rust](https://rustup.rs/) with the **MSVC** toolchain (`rustup default stable` and Visual Studio Build Tools with C++)
-- WebView2 (usually already on Windows 10/11)
-
-Then from the repo root:
+Requires [Node.js](https://nodejs.org/) (LTS), [Rust](https://rustup.rs/) with the MSVC toolchain, and Windows build tools.
 
 ```powershell
 git clone https://github.com/sensourav/BackupGuard.git
@@ -68,32 +43,19 @@ cd BackupGuard
 npm run installer
 ```
 
-Or double-click **`scripts\build-installer.cmd`**.
+Or run `scripts\build-installer.cmd`. Outputs land under `release/` (installers are gitignored). Repeat builds: `.\scripts\build-installer.ps1 -SkipNpmInstall`.
 
-**Outputs:**
-
-| File | Purpose |
-|------|---------|
-| `release/BackupGuard_<version>_<yyyyMMdd-HHmmss>_x64-setup.exe` | This build’s installer |
-| `release/BackupGuard_latest_x64-setup.exe` | Same as the last build |
-| `release/latest-build.json` | Version, stamp, file names |
-| Cargo target `...\release\bundle\nsis\` | Tauri’s raw bundle output |
-
-Skip `npm install` on repeat builds:
-
-```powershell
-.\scripts\build-installer.ps1 -SkipNpmInstall
-```
-
----
-
-## Development (no installer)
+## Development
 
 ```powershell
 npm install
 npm run tauri dev
 ```
 
-## License
+## Security
 
-Private / all rights reserved unless you add a license file.
+See [SECURITY.md](SECURITY.md). Report vulnerabilities through GitHub private security advisories.
+
+## Licence
+
+MIT — see [LICENSE](LICENSE). Third-party components are listed in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).

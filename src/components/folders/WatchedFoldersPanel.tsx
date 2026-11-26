@@ -111,19 +111,19 @@ export function WatchedFoldersPanel({
           label="Local path"
           value={form.localPath}
           onChange={(localPath) => setForm((current) => ({ ...current, localPath }))}
-          placeholder="C:/Backups/DJI/"
+          placeholder="C:/Backups/Photos/"
         />
         <Field
           label="External path"
           value={form.externalPath}
           onChange={(externalPath) => setForm((current) => ({ ...current, externalPath }))}
-          placeholder="E:/Backups/DJI/"
+          placeholder="E:/Backups/Photos/"
         />
         <Field
           label="OneDrive path"
           value={form.cloudPath}
           onChange={(cloudPath) => setForm((current) => ({ ...current, cloudPath }))}
-          placeholder="/OneDrive/Backups/DJI/"
+          placeholder="/OneDrive/Backups/Photos/"
         />
         <button
           type="submit"

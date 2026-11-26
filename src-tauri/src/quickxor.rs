@@ -139,7 +139,7 @@ mod tests {
 
     #[test]
     fn chunk_splits_match_a_single_update() {
-        let sample = b"The quick brown fox jumps over the lazy dog. 2026-09-16/DJI_001.MOV";
+        let sample = b"The quick brown fox jumps over the lazy dog. 2026-09-16/clip_001.mov";
         let mut whole = QuickXorHash::new();
         whole.update(sample);
 

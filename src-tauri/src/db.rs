@@ -871,10 +871,10 @@ mod tests {
         let db = Database::open_in_memory().unwrap();
         let folder = db
             .add_folder(NewFolder {
-                name: "DJI".to_string(),
+                name: "Photos".to_string(),
                 local_path: root.display().to_string(),
-                external_path: "E:/Backups/DJI/".to_string(),
-                cloud_path: "/OneDrive/Backups/DJI/".to_string(),
+                external_path: "E:/Backups/Photos/".to_string(),
+                cloud_path: "/OneDrive/Backups/Photos/".to_string(),
             })
             .unwrap();
         db.remove_folder(&folder.id).unwrap();
@@ -916,10 +916,10 @@ mod tests {
         let db = Database::open_in_memory().unwrap();
         let folder = db
             .add_folder(NewFolder {
-                name: "DJI".to_string(),
-                local_path: "C:/Backups/DJI/".to_string(),
-                external_path: "E:/Backups/DJI/".to_string(),
-                cloud_path: "/OneDrive/Backups/DJI/".to_string(),
+                name: "Photos".to_string(),
+                local_path: "C:/Backups/Photos/".to_string(),
+                external_path: "E:/Backups/Photos/".to_string(),
+                cloud_path: "/OneDrive/Backups/Photos/".to_string(),
             })
             .unwrap();
         db.replace_file_index(

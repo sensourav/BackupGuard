@@ -125,9 +125,9 @@ mod tests {
 
     #[test]
     fn parses_windows_drive_letters() {
-        assert_eq!(drive_letter("E:/Backups/DJI/").as_deref(), Some("E:"));
+        assert_eq!(drive_letter("E:/Backups/Photos/").as_deref(), Some("E:"));
         assert_eq!(drive_letter(r"c:\Backups").as_deref(), Some("C:"));
-        assert_eq!(drive_letter("/OneDrive/Backups/DJI/"), None);
+        assert_eq!(drive_letter("/OneDrive/Backups/Photos/"), None);
     }
 
     #[test]
@@ -145,7 +145,7 @@ mod tests {
             drive_letter: "C:".to_string(),
             label: "OS".to_string(),
         }];
-        assert!(letter_is_connected("C:/Backups/DJI/", &volumes));
-        assert!(!letter_is_connected("E:/Backups/DJI/", &volumes));
+        assert!(letter_is_connected("C:/Backups/Photos/", &volumes));
+        assert!(!letter_is_connected("E:/Backups/Photos/", &volumes));
     }
 }
