@@ -16,11 +16,11 @@ const unmounted = (): TargetPresence => ({
 
 export const watchedSets: WatchedFolderSet[] = [
   {
-    id: "set-dji",
-    name: "DJI",
-    localPath: "C:/Backups/DJI/",
-    externalPath: "E:/Backups/DJI/",
-    cloudPath: "/OneDrive/Backups/DJI/",
+    id: "set-photos",
+    name: "Photos",
+    localPath: "C:/Backups/Photos/",
+    externalPath: "E:/Backups/Photos/",
+    cloudPath: "/OneDrive/Backups/Photos/",
     localMount: "MOUNTED",
     externalMount: "UNMOUNTED",
     cloudLink: "CONNECTED",
@@ -38,8 +38,8 @@ export const systemStatus: SystemStatus = {
 export const discrepancies: DiscrepancyItem[] = [
   {
     id: "item-healthy",
-    setId: "set-dji",
-    relativePath: "2026-09-16/DJI_0001.MP4",
+    setId: "set-photos",
+    relativePath: "2026-09-16/clip_0001.mp4",
     status: "HEALTHY",
     local: {
       present: true,
@@ -58,8 +58,8 @@ export const discrepancies: DiscrepancyItem[] = [
   },
   {
     id: "item-missing",
-    setId: "set-dji",
-    relativePath: "2026-09-16/DJI_0002.SRT",
+    setId: "set-photos",
+    relativePath: "2026-09-16/clip_0002.srt",
     status: "MISSING",
     local: {
       present: true,
@@ -78,8 +78,8 @@ export const discrepancies: DiscrepancyItem[] = [
   },
   {
     id: "item-corrupt",
-    setId: "set-dji",
-    relativePath: "2026-09-18/DJI_0044.MOV",
+    setId: "set-photos",
+    relativePath: "2026-09-18/clip_0044.mov",
     status: "CORRUPT",
     local: {
       present: true,
@@ -98,8 +98,8 @@ export const discrepancies: DiscrepancyItem[] = [
   },
   {
     id: "item-bitrot",
-    setId: "set-dji",
-    relativePath: "2026-09-12/DJI_0019.DNG",
+    setId: "set-photos",
+    relativePath: "2026-09-12/clip_0019.raw",
     status: "BIT_ROT",
     local: {
       present: true,
@@ -118,8 +118,8 @@ export const discrepancies: DiscrepancyItem[] = [
   },
   {
     id: "item-healthy-still",
-    setId: "set-dji",
-    relativePath: "2026-09-18/DJI_0045.JPG",
+    setId: "set-photos",
+    relativePath: "2026-09-18/clip_0045.jpg",
     status: "HEALTHY",
     local: {
       present: true,
@@ -142,8 +142,8 @@ export const auditLogs: AuditLog[] = [
   {
     id: "audit-2026-09-26",
     timestamp: "2026-09-26T08:14:00Z",
-    setId: "set-dji",
-    setName: "DJI",
+    setId: "set-photos",
+    setName: "Photos",
     summary: "Compared local storage with OneDrive. External volume was unmounted.",
     healthy: 2,
     missing: 1,
@@ -155,8 +155,8 @@ export const auditLogs: AuditLog[] = [
   {
     id: "audit-2026-09-20",
     timestamp: "2026-09-20T19:02:41Z",
-    setId: "set-dji",
-    setName: "DJI",
+    setId: "set-photos",
+    setName: "Photos",
     summary: "All three targets were connected. One size mismatch on 2026-09-18.",
     healthy: 3,
     missing: 0,
@@ -168,8 +168,8 @@ export const auditLogs: AuditLog[] = [
   {
     id: "audit-2026-09-16",
     timestamp: "2026-09-16T21:10:05Z",
-    setId: "set-dji",
-    setName: "DJI",
+    setId: "set-photos",
+    setName: "Photos",
     summary: "Baseline checksums stored for the 2026-09-16 folder.",
     healthy: 4,
     missing: 0,

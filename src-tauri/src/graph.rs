@@ -326,15 +326,15 @@ mod tests {
 
     #[test]
     fn strips_onedrive_prefix() {
-        assert_eq!(drive_relative("/OneDrive/Backups/DJI/"), "Backups/DJI");
+        assert_eq!(drive_relative("/OneDrive/Backups/Photos/"), "Backups/Photos");
         assert_eq!(drive_relative("/OneDrive/"), "");
-        assert_eq!(drive_relative("Backups/DJI"), "Backups/DJI");
+        assert_eq!(drive_relative("Backups/Photos"), "Backups/Photos");
     }
 
     #[test]
     fn children_url_never_requests_content() {
-        let url = children_url("Backups/DJI").unwrap();
-        assert!(url.contains("/me/drive/root:/Backups/DJI:/children"));
+        let url = children_url("Backups/Photos").unwrap();
+        assert!(url.contains("/me/drive/root:/Backups/Photos:/children"));
         assert!(url.contains("quickXorHash") || url.contains("file"));
         assert_metadata_url(&url).unwrap();
         let blocked = assert_metadata_url(
@@ -364,7 +364,7 @@ mod tests {
         let body = r#"{"value":[{"name":"clip.txt","size":4,"lastModifiedDateTime":"2026-09-16T00:00:00Z","file":{"hashes":{"quickXorHash":"qq=="}}}]}"#;
         let mut urls = Vec::new();
         let files = list_files_with(
-            "/OneDrive/Backups/DJI/",
+            "/OneDrive/Backups/Photos/",
             &CloudScope::Full,
             |url| {
                 urls.push(url.to_string());
